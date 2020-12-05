@@ -1,4 +1,4 @@
-package days
+package main
 
 import (
 	"bufio"
@@ -18,8 +18,8 @@ type password struct {
 
 // Day2 Advent of Code Challenge
 // Solution
-func Day2() {
-	file, err := os.Open("days/resources/puzzle_02.txt")
+func main() {
+	file, err := os.Open("input.txt")
 	defer file.Close()
 
 	if err != nil {

@@ -1,4 +1,4 @@
-package days
+package main
 
 import (
 	"bufio"
@@ -12,8 +12,8 @@ type slope struct {
 }
 
 // Day3 Advent of Code Challenge
-func Day3() {
-	file, err := os.Open("days/resources/puzzle_03.txt")
+func main() {
+	file, err := os.Open("input.txt")
 	defer file.Close()
 
 	if err != nil {

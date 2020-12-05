@@ -1,4 +1,4 @@
-package days
+package main
 
 import (
 	"bufio"
@@ -9,9 +9,9 @@ import (
 
 // Day1 Advent of Code Challenge
 // Solution
-func Day1() {
+func main() {
 	// Open the file
-	file, err := os.Open("days/resources/puzzle_01.txt")
+	file, err := os.Open("input.txt")
 	defer file.Close()
 
 	if err != nil {
