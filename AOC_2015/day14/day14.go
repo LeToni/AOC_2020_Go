@@ -54,7 +54,7 @@ func main() {
 			leadingReindeer = reindeer
 		}
 	}
-	fmt.Printf("%s has won with %d km at the of race\n", leadingReindeer.Name, leadingReindeer.Distance)
+	fmt.Printf("%s has won with %d km at the end of race\n", leadingReindeer.Name, leadingReindeer.Distance)
 
 	ResetCompition()
 
@@ -81,7 +81,7 @@ func main() {
 		}
 	}
 
-	fmt.Printf("%s has won with %d points\n", leadingReindeer.Name, leadingReindeer.Score)
+	fmt.Printf("%s has won with %d points at the end\n", leadingReindeer.Name, leadingReindeer.Score)
 }
 
 func ResetCompition() {
