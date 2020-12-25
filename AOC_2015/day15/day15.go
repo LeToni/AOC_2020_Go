@@ -13,7 +13,8 @@ type Ingredient struct {
 }
 
 const (
-	teaspoons int = 100
+	teaspoons   int = 100
+	maxCalories int = 500
 )
 
 var (
@@ -47,8 +48,27 @@ func main() {
 	}
 
 	result := calculateBestRatio()
-
 	fmt.Printf("Result with the best score: %d\n", result)
+	result = calculateBestCaloriesRatio()
+	fmt.Printf("Result with the best score and max calories: %d\n", result)
+}
+
+func calculateBestCaloriesRatio() int {
+	bestScore := 0
+
+	for a := 0; a <= 100; a++ {
+		for b := 0; b <= 100-a; b++ {
+			for c := 0; c <= 100-a-b; c++ {
+				d := 100 - (a + b + c)
+				score, calories := calculateScore(a, b, c, d)
+				if score > bestScore && calories <= maxCalories {
+					bestScore = score
+				}
+			}
+		}
+	}
+
+	return bestScore
 }
 
 func calculateBestRatio() int {
@@ -58,7 +78,7 @@ func calculateBestRatio() int {
 		for b := 0; b <= 100-a; b++ {
 			for c := 0; c <= 100-a-b; c++ {
 				d := 100 - (a + b + c)
-				score := calculateScore(a, b, c, d)
+				score, _ := calculateScore(a, b, c, d)
 				if score > bestScore {
 					bestScore = score
 				}
@@ -69,10 +89,10 @@ func calculateBestRatio() int {
 	return bestScore
 }
 
-func calculateScore(scores ...int) int {
+func calculateScore(scores ...int) (int, int) {
 
 	var (
-		capacity, durability, flavor, texture int
+		capacity, durability, flavor, texture, calories int
 	)
 
 	for i := 0; i < len(scores); i++ {
@@ -80,12 +100,14 @@ func calculateScore(scores ...int) int {
 		durability = durability + ingredients[i].durability*scores[i]
 		flavor = flavor + ingredients[i].flavor*scores[i]
 		texture = texture + ingredients[i].texture*scores[i]
+		calories = calories + ingredients[i].calories*scores[i]
 	}
 
 	if capacity <= 0 || durability <= 0 || flavor <= 0 || texture <= 0 {
-		return 0
+		return 0, 0
 	}
 
 	score := capacity * durability * flavor * texture
-	return score
+
+	return score, calories
 }
