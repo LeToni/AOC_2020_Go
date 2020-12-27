@@ -13,6 +13,7 @@ type position struct {
 const (
 	gridSizeX int = 100
 	gridSizeY int = 100
+	maxSteps  int = 100
 )
 
 var (
@@ -35,15 +36,24 @@ func main() {
 	for scanner.Scan() {
 		row := scanner.Bytes()
 		for j := range row {
-			grid[i][j] = row[j]
+			if isCornerLight(i, j) {
+				grid[i][j] = '#'
+			} else {
+				grid[i][j] = row[j]
+			}
+
 		}
 		i++
 	}
 
-	for steps := 0; steps < 100; steps++ {
+	for steps := 0; steps < maxSteps; steps++ {
 		var currentGrid [gridSizeX][gridSizeY]byte
 		for i := range grid {
 			for j := range grid[i] {
+				if isCornerLight(i, j) {
+					currentGrid[i][j] = '#'
+					continue
+				}
 				neighborsLightOn := adjacentNeighborsHaveLightOn(i, j)
 				if grid[i][j] == '#' {
 					if neighborsLightOn == 2 || neighborsLightOn == 3 {
@@ -51,14 +61,14 @@ func main() {
 					} else {
 						currentGrid[i][j] = '.'
 					}
-				}
-				if grid[i][j] == '.' {
+				} else if grid[i][j] == '.' {
 					if neighborsLightOn == 3 {
 						currentGrid[i][j] = '#'
 					} else {
 						currentGrid[i][j] = '.'
 					}
 				}
+
 			}
 		}
 		grid = currentGrid
@@ -110,4 +120,16 @@ func countAmountOfLightsOn() int {
 		}
 	}
 	return count
+}
+
+func isCornerLight(x, y int) bool {
+	if (x == gridSizeX-1 || x == 0) && x == y {
+		return true
+	} else if x == 0 && y == gridSizeY-1 {
+		return true
+	} else if x == gridSizeX-1 && y == 0 {
+		return true
+	} else {
+		return false
+	}
 }
