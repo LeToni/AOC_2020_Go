@@ -38,6 +38,19 @@ func main() {
 	}
 }
 
+func adjacentNeighborsHaveLightOn(x, y int) int {
+	amountNeighbors := 0
+
+	for _, dir := range directions {
+		neighbor := neighborAtDirection(x, y, dir)
+		if withinGrid(neighbor) && HasLightOn(neighbor) {
+			amountNeighbors++
+		}
+	}
+
+	return amountNeighbors
+}
+
 func HasLightOn(p position) bool {
 	if withinGrid(p) && grid[p.posX][p.posY] == '#' {
 		return true
