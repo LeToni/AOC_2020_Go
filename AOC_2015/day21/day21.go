@@ -3,11 +3,12 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 )
 
 type Attacker struct {
-	hp, damage, armor int
+	hp, rawDamage, armor int
 }
 
 type Item struct {
@@ -62,9 +63,26 @@ func main() {
 		if n, _ := fmt.Sscanf(input, "Hit Points: %d", &enemyHP); n == 1 {
 			Boss.hp = enemyHP
 		} else if n, _ := fmt.Sscanf(input, "Damage: %d", &enemyDamage); n == 1 {
-			Boss.damage = enemyDamage
+			Boss.rawDamage = enemyDamage
 		} else if n, _ := fmt.Sscanf(input, "Armor: %d", &enemyArmor); n == 1 {
 			Boss.armor = enemyArmor
 		}
 	}
+}
+
+func WinAgainstBoss() bool {
+	heroDamage := Player.rawDamage - Boss.armor
+	bossDamage := Boss.rawDamage - Player.armor
+
+	if heroDamage < 1 {
+		heroDamage = 1
+	}
+	if bossDamage < 1 {
+		bossDamage = 1
+	}
+
+	roundsForPlayerWin := math.Ceil(float64(Boss.hp) / float64(heroDamage))
+	roundsForBossWin := math.Ceil(float64(Player.hp) / float64(bossDamage))
+
+	return roundsForPlayerWin <= roundsForBossWin
 }
