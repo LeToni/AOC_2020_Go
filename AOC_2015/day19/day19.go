@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strings"
 )
 
 type rule struct {
@@ -19,6 +20,7 @@ var (
 	molecules = make(map[string]bool)
 	molecule  string
 	electrons []*electron
+	element   = make(map[string]bool)
 )
 
 func main() {
@@ -43,12 +45,15 @@ func main() {
 		} else if n, _ := fmt.Sscanf(input, "%s => %s", &inputLeft, &inputRight); n == 2 {
 			inputRule := rule{leftSide: inputLeft, rightSide: inputRight}
 			rules = append(rules, &inputRule)
+			element[inputLeft] = true
 		} else {
 			molecule = input
 		}
 	}
 	CreateMolecules()
 	fmt.Println("Amount of distinct molecules that can be created:", len(molecules))
+	steps := RecreateMolecule()
+	fmt.Println("Steps required to produce molecule:", steps)
 }
 
 func CreateMolecules() {
@@ -71,6 +76,35 @@ func CreateMolecules() {
 
 func RecreateMolecule() int {
 	steps := 0
+	e := molecule
+	regFilterTerminals := regexp.MustCompile("Rn|Ar")
+	steps = steps + len(regFilterTerminals.FindAllStringIndex(e, -1))
+	e = regFilterTerminals.ReplaceAllString(e, "")
 
-	return steps
+	regFilterTerminals = regexp.MustCompile("Y")
+	steps = steps + len(regFilterTerminals.FindAllStringIndex(e, -1))*2
+	e = regFilterTerminals.ReplaceAllString(e, "")
+
+	for _, r := range rules {
+		filterReg := regexp.MustCompile(r.rightSide)
+
+		if !filterReg.MatchString(e) {
+			continue
+		}
+
+		steps = steps + len(filterReg.FindAllStringIndex(e, -1))
+		e = strings.ReplaceAll(e, r.rightSide, "")
+	}
+
+	for _, r := range rules {
+		filterReg := regexp.MustCompile(r.leftSide)
+
+		if !filterReg.MatchString(e) {
+			continue
+		}
+
+		steps = steps + len(filterReg.FindAllStringIndex(e, -1))
+		e = strings.ReplaceAll(e, r.leftSide, "")
+	}
+	return steps - len(element) - 1
 }
