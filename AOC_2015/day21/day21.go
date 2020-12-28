@@ -73,6 +73,11 @@ func main() {
 		}
 	}
 
+	cost := minimalCostToWin()
+	fmt.Println("Minimum of gold to spend in order to win: ", cost)
+}
+
+func minimalCostToWin() int {
 	minimumCost := int(MaxUint >> 1)
 
 	for _, weapon := range Weapons {
@@ -96,7 +101,7 @@ func main() {
 		}
 	}
 
-	fmt.Println(minimumCost)
+	return minimumCost
 }
 
 func WinAgainstBoss() bool {
