@@ -75,6 +75,8 @@ func main() {
 
 	cost := minimalCostToWin()
 	fmt.Println("Minimum of gold to spend in order to win: ", cost)
+	cost = getPlayedByShopKeeper()
+	fmt.Println("Amount to pay when getting played by shopkeeper", cost)
 }
 
 func minimalCostToWin() int {
@@ -102,6 +104,33 @@ func minimalCostToWin() int {
 	}
 
 	return minimumCost
+}
+
+func getPlayedByShopKeeper() int {
+	maxCost := 0
+
+	for _, weapon := range Weapons {
+		for _, armor := range Armor {
+			for _, ring1 := range Rings {
+				for _, ring2 := range Rings {
+					if ring1 == ring2 {
+						continue
+					}
+
+					Player.hp = 100
+					Player.rawDamage = weapon.damage + armor.damage + ring1.damage + ring2.damage
+					Player.armor = weapon.armor + armor.armor + ring1.armor + ring2.armor
+					cost := weapon.cost + armor.cost + ring1.cost + ring2.cost
+
+					if !WinAgainstBoss() && maxCost < cost {
+						maxCost = cost
+					}
+				}
+			}
+		}
+	}
+
+	return maxCost
 }
 
 func WinAgainstBoss() bool {
