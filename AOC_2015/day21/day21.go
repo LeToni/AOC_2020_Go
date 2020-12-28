@@ -7,6 +7,10 @@ import (
 	"os"
 )
 
+const (
+	MaxUint = ^uint(0)
+)
+
 type Attacker struct {
 	hp, rawDamage, armor int
 }
@@ -68,6 +72,31 @@ func main() {
 			Boss.armor = enemyArmor
 		}
 	}
+
+	minimumCost := int(MaxUint >> 1)
+
+	for _, weapon := range Weapons {
+		for _, armor := range Armor {
+			for _, ring1 := range Rings {
+				for _, ring2 := range Rings {
+					if ring1 == ring2 {
+						continue
+					}
+
+					Player.hp = 100
+					Player.rawDamage = weapon.damage + armor.damage + ring1.damage + ring2.damage
+					Player.armor = weapon.armor + armor.armor + ring1.armor + ring2.armor
+					cost := weapon.cost + armor.cost + ring1.cost + ring2.cost
+
+					if WinAgainstBoss() && minimumCost > cost {
+						minimumCost = cost
+					}
+				}
+			}
+		}
+	}
+
+	fmt.Println(minimumCost)
 }
 
 func WinAgainstBoss() bool {
