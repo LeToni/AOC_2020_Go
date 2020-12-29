@@ -29,6 +29,12 @@ var (
 		{name: "Poison", mana: 173, damage: 3, heal: 0, effect: "Poison"},
 		{name: "Recharge", mana: 229, damage: 0, heal: 0, effect: "Recharge"},
 	}
+
+	player             Player
+	hpPlayer           int = 50
+	manaPlayer         int = 500
+	boss               Boss
+	hpBoss, bossDamage int
 )
 
 func main() {
