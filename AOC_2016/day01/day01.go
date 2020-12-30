@@ -1,5 +1,15 @@
 package main
 
+import (
+	"bufio"
+	"fmt"
+	"math"
+	"os"
+	"regexp"
+	"strconv"
+	"strings"
+)
+
 const (
 	N int = 0
 	E int = 1
@@ -37,6 +47,37 @@ func (passenger *Passenger) Turn(direction string) {
 	}
 }
 
-func main() {
+func distanceToHQ(x, y int) int {
+	return int(math.Abs(float64(x)) + math.Abs(float64(y)))
+}
 
+func main() {
+	file, err := os.Open("input.txt")
+	defer file.Close()
+
+	if err != nil {
+		panic(err)
+	}
+
+	passenger := Passenger{x: 0, y: 0, facing: N}
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		input := scanner.Text()
+		directions := strings.Split(input, ",")
+
+		filterBlocks := regexp.MustCompile(`(\d+)`)
+		for _, direction := range directions {
+			blocks, _ := strconv.Atoi(filterBlocks.FindAllString(direction, -1)[0])
+
+			if strings.Contains(direction, "R") {
+				passenger.Walk("R", blocks)
+			} else {
+				passenger.Walk("L", blocks)
+			}
+		}
+	}
+
+	distance := distanceToHQ(passenger.x, passenger.y)
+	fmt.Println("Distance from landing zone to HQ: ", distance)
 }
