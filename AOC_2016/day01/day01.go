@@ -22,10 +22,7 @@ type Passenger struct {
 	facing int
 }
 
-func (passenger *Passenger) Walk(direction string, blocks int) {
-
-	passenger.Turn(direction)
-
+func (passenger *Passenger) Walk(blocks int) {
 	switch passenger.facing {
 	case E:
 		passenger.x = passenger.x + blocks
@@ -79,19 +76,23 @@ func main() {
 			blocks, _ := strconv.Atoi(filterBlocks.FindAllString(direction, -1)[0])
 
 			if strings.Contains(direction, "R") {
-				passenger.Walk("R", blocks)
+				passenger.Turn("R")
 			} else {
-				passenger.Walk("L", blocks)
+				passenger.Turn("L")
 			}
-			currentPlace := Location{passenger.x, passenger.y}
-			if _, keyExists := visited[currentPlace]; !keyExists {
-				visited[currentPlace] = true
-				fmt.Println(currentPlace)
-			} else if !secondSolved {
-				fmt.Println("Place with coordinates", currentPlace, "has alreay been visited")
-				fmt.Println("Distance from Landing zone:", distanceToHQ(currentPlace.x, currentPlace.y))
-				secondSolved = true
+			for i := 0; i < blocks; i++ {
+				passenger.Walk(1)
+
+				currentPlace := Location{passenger.x, passenger.y}
+				if _, keyExists := visited[currentPlace]; !keyExists {
+					visited[currentPlace] = true
+				} else if !secondSolved {
+					fmt.Println("Place with coordinates", currentPlace, "has alreay been visited")
+					fmt.Println("Distance from Landing zone:", distanceToHQ(currentPlace.x, currentPlace.y))
+					secondSolved = true
+				}
 			}
+
 		}
 	}
 
