@@ -21,17 +21,29 @@ type Effect struct {
 	active              bool
 }
 
-func (w *Wizard) isDead() bool {
+func (wizard *Wizard) isDead() bool {
 	// wizard can be also considered dead if he has not enough mana to cast spell
-	if w.hp <= 0 || w.mana < 53 {
+	if wizard.hp <= 0 || wizard.mana < 53 {
 		return true
 	} else {
 		return false
 	}
 }
 
-func (b *Boss) isDead() bool {
-	if b.hp <= 0 {
+func (wizard *Wizard) canCast(spell *Spell) bool {
+	if spell.mana > wizard.mana {
+		return false
+	}
+
+	if spell.name == "Shield" || spell.name == "Poison" || spell.name == "Recharge" {
+		return !effects[spell.name].active
+	}
+
+	return true
+}
+
+func (boss *Boss) isDead() bool {
+	if boss.hp <= 0 {
 		return true
 	} else {
 		return false
