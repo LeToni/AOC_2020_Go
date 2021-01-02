@@ -20,6 +20,19 @@ func NewBag(bagColor string) *Bag {
 	}
 }
 
+func (bag *Bag) AmountOfBagsIn() int {
+	amount := 1
+
+	if len(bag.contents) == 0 {
+		return 1
+	}
+	for k := range bag.contents {
+		// eval = eval || bags[k].ContainsBag(color)
+		amount = amount + bag.contents[k]*bags[k].AmountOfBagsIn()
+	}
+	return amount
+}
+
 func (bag *Bag) ContainsBag(color string) bool {
 
 	eval := false
@@ -86,20 +99,7 @@ func TaskOne() {
 }
 
 func TaskTwo(bag string) {
-	amount := AmountOfBagsIn(bags[bag]) - 1
+	amount := bags[bag].AmountOfBagsIn() - 1
 
 	fmt.Println("Amount of bags that fit in", bag, "bag:", amount)
-}
-
-func AmountOfBagsIn(bag *Bag) int {
-	amount := 1
-
-	if len(bag.contents) == 0 {
-		return 1
-	}
-	for k := range bag.contents {
-		// eval = eval || bags[k].ContainsBag(color)
-		amount = amount + bag.contents[k]*AmountOfBagsIn(bags[k])
-	}
-	return amount
 }
