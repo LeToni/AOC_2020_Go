@@ -55,7 +55,7 @@ var (
 		{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1},
 	}
 
-	seatArea = [][]byte{}
+	seatArea = [][]rune{}
 )
 
 func main() {
@@ -67,16 +67,19 @@ func main() {
 
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
-		row := scanner.Bytes()
+		row := []rune{}
+		for _, r := range scanner.Text() {
+			row = append(row, r)
+		}
 		seatArea = append(seatArea, row)
 	}
 
 	seatsChanged := true
 	for seatsChanged {
 		seatsChanged = false
-		newSeatArea := [][]byte{}
+		newSeatArea := [][]rune{}
 		for row := range seatArea {
-			newRow := []byte{}
+			newRow := []rune{}
 			for seat, seatStatus := range seatArea[row] {
 				newSeatstatus := seatStatus
 				pos := Position{row, seat}
@@ -93,5 +96,5 @@ func main() {
 		}
 		seatArea = newSeatArea
 	}
-	fmt.Println(countTotalOccupiedSeats())
+	fmt.Println("Task 1 -> Total amount of seats:", countTotalOccupiedSeats())
 }
