@@ -21,13 +21,23 @@ type Instruction struct {
 	value  int
 }
 
-func (instruct *Instruction) executeOn(ship *Ship) {
+func (instruct *Instruction) executeOnShip(ship *Ship) {
 	if instruct.action == 'R' || instruct.action == 'L' {
 		ship.turn(instruct.action, instruct.value)
 	} else if instruct.action == 'F' {
 		ship.move(instruct.value)
 	} else {
 		ship.navigate(instruct.action, instruct.value)
+	}
+}
+
+func (instruct *Instruction) executeOn(wp *WayPoint, ship *Ship) {
+	if instruct.action == 'R' || instruct.action == 'L' {
+		wp.Rotate(instruct.action, instruct.value)
+	} else if instruct.action == 'F' {
+		wp.moveShip(ship, instruct.value)
+	} else {
+		wp.moveSelf(instruct.action, instruct.value)
 	}
 }
 
@@ -73,6 +83,56 @@ func (ship *Ship) turn(direction rune, turnRadius int) {
 	}
 }
 
+type WayPoint struct {
+	x, y int
+}
+
+func (wp *WayPoint) moveSelf(cardinalDirection rune, units int) {
+	switch cardinalDirection {
+	case 'N':
+		wp.y = wp.y + units
+	case 'E':
+		wp.x = wp.x + units
+	case 'S':
+		wp.y = wp.y - units
+	case 'W':
+		wp.x = wp.x - units
+	default:
+		err := fmt.Errorf("Not a valid cardinal direction: %d", cardinalDirection)
+		panic(err)
+	}
+}
+
+func (wp *WayPoint) moveShip(ship *Ship, units int) {
+	ship.x = ship.x + wp.x*units
+	ship.y = ship.y + wp.y*units
+}
+
+func (wp *WayPoint) Rotate(direction rune, turnRadius int) {
+
+	if direction == 'R' {
+		wp.rotateAroundShip(turnRadius)
+	} else {
+		wp.rotateAroundShip(-turnRadius)
+	}
+}
+
+func (wp *WayPoint) rotateAroundShip(turnRadius int) {
+	switch turnRadius {
+	case 90, -270:
+		newX, newY := wp.y, -wp.x
+		wp.x = newX
+		wp.y = newY
+	case 180, -180:
+		wp.rotateAroundShip(90)
+		wp.rotateAroundShip(90)
+	case 270, -90:
+		wp.rotateAroundShip(90)
+		wp.rotateAroundShip(90)
+		wp.rotateAroundShip(90)
+	}
+}
+
 func main() {
 	file, err := os.Open("input.txt")
 	defer file.Close()
@@ -94,9 +154,17 @@ func main() {
 	ship := &Ship{x: 0, y: 0, facing: E}
 
 	for _, instruction := range instructions {
-		instruction.executeOn(ship)
+		instruction.executeOnShip(ship)
 	}
 
 	result := math.Abs(float64(ship.x)) + math.Abs(float64(ship.y))
 	fmt.Println("Task1 -> Distance between starting point and ship:", result)
+
+	ship = &Ship{x: 0, y: 0, facing: E}
+	wp := &WayPoint{x: 10, y: 1}
+	for _, instruction := range instructions {
+		instruction.executeOn(wp, ship)
+	}
+	result = math.Abs(float64(ship.x)) + math.Abs(float64(ship.y))
+	fmt.Println("Task2 -> Distance between starting point and ship:", result)
 }
