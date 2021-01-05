@@ -27,11 +27,6 @@ func (mask *Mask) Process(input string) {
 	mask.on, _ = strconv.ParseInt(maskOr, 2, 64)
 }
 
-var (
-	memory = make(map[int]int64)
-	mask   Mask
-)
-
 func sumMemory() int64 {
 	var sum int64 = 0
 	for _, v := range memory {
@@ -39,6 +34,15 @@ func sumMemory() int64 {
 	}
 	return sum
 }
+
+func resetMemory() {
+	memory = make(map[int]int64)
+}
+
+var (
+	memory = make(map[int]int64)
+	mask   Mask
+)
 
 func main() {
 	TaskOne()
@@ -67,7 +71,7 @@ func TaskOne() {
 		}
 	}
 
-	fmt.Println(sumMemory())
+	fmt.Println("Task 1 -> Sum of all values in memory:", sumMemory())
 }
 
 func TaskTwo() {
