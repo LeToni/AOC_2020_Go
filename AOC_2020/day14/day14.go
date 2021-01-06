@@ -85,10 +85,9 @@ func TaskTwo() {
 	}
 
 	var (
-		addr             int
-		value            int64
-		maskInput        string
-		floatingBitIndex = []int{}
+		addr      int
+		value     int64
+		maskInput string
 	)
 
 	for scanner := bufio.NewScanner(file); scanner.Scan(); {
@@ -96,25 +95,14 @@ func TaskTwo() {
 		if n, _ := fmt.Sscanf(input, "mask = %s", &maskInput); n == 1 {
 
 		} else if n, _ := fmt.Sscanf(input, "mem[%d] = %d", &addr, &value); n == 2 {
-			for i, bit := range maskInput {
-				if bit == '1' {
-					addr |= 1 << i
-				} else if bit == 'X' {
-					floatingBitIndex = append(floatingBitIndex, i)
+			for i, x := 0, strings.Count(maskInput, "X"); i < 1<<x; i++ {
+				maskRaw := strings.NewReplacer("X", "x", "0", "X").Replace(maskInput)
+				for _, r := range fmt.Sprintf("%0*b", x, i) {
+					maskRaw = strings.Replace(maskRaw, "x", string(r), 1)
 				}
-			}
-
-			addrVariants := []int{addr}
-			for _, i := range floatingBitIndex {
-				for _, addr := range addrVariants {
-					bit1Variant := addr | 1<<i
-					bit0Variant := addr ^ 1<<i
-					addrVariants = append(addrVariants, bit1Variant, bit0Variant)
-				}
-			}
-
-			for _, addr := range addrVariants {
-				memory[addr] = value
+				mask.Process(maskRaw)
+				addr := mask.ApplyOn(int64(addr))
+				memory[int(addr)] = value
 			}
 		}
 	}
