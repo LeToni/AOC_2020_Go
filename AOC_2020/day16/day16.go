@@ -82,4 +82,19 @@ func main() {
 		}
 	}
 
+	// Reading nearby tickets
+	for i, ticket := range strings.Split(string(content[2]), "\n") {
+		if i == 0 {
+			continue
+		}
+		var nearbyTicket Ticket
+		numbers := strings.Split(ticket, ",")
+
+		for _, number := range numbers {
+			n, _ := strconv.Atoi(number)
+			nearbyTicket.numbers = append(ownTicket.numbers, n)
+		}
+
+		nearByTickets = append(nearByTickets, nearbyTicket)
+	}
 }
