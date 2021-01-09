@@ -69,4 +69,17 @@ func main() {
 		ticketFields = append(ticketFields, newTicketField)
 	}
 
+	// reading own ticket
+	for i, ticket := range strings.Split(string(content[1]), "\n") {
+		if i == 0 {
+			continue
+		}
+		numbers := strings.Split(ticket, ",")
+
+		for _, number := range numbers {
+			n, _ := strconv.Atoi(number)
+			ownTicket.numbers = append(ownTicket.numbers, n)
+		}
+	}
+
 }
