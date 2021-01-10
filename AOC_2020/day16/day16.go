@@ -38,6 +38,16 @@ type Ticket struct {
 	numbers []int
 }
 
+func (ticket *Ticket) CalculateError() {
+	for _, number := range ticket.numbers {
+		for _, tf := range ticketFields {
+			if !tf.isValid(number) {
+				errorRate = errorRate + number
+			}
+		}
+	}
+}
+
 var (
 	ticketFields  = []TicketField{}
 	ownTicket     Ticket
@@ -97,4 +107,5 @@ func main() {
 
 		nearByTickets = append(nearByTickets, nearbyTicket)
 	}
+
 }
