@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"regexp"
 	"strconv"
@@ -61,7 +62,7 @@ var (
 )
 
 func main() {
-	file, err := ioutil.ReadFile("input_test.txt")
+	file, err := ioutil.ReadFile("input.txt")
 	if err != nil {
 		panic(err)
 	}
@@ -116,4 +117,5 @@ func main() {
 	for _, nbt := range nearByTickets {
 		nbt.CalculateError()
 	}
+	fmt.Println("Task 1 -> Scanning error rate for nearby tickets:", errorRate)
 }
