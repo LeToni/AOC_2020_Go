@@ -96,6 +96,7 @@ func readInput() {
 		rule2 := Intervall{min2Intervall, max2Intervall}
 
 		newTicketField := TicketField{name: fieldName, rule1: rule1, rule2: rule2}
+		newTicketField := TicketField{name: fieldName, rule1: rule1, rule2: rule2, index: -1, pos: make(map[int]bool)}
 		ticketFields = append(ticketFields, newTicketField)
 	}
 
