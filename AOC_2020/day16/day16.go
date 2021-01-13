@@ -26,6 +26,7 @@ type TicketField struct {
 	rule2 Intervall
 	index int
 	pos map[int]bool
+	pos   map[int]bool
 }
 
 func (tf *TicketField) isValid(number int) bool {
@@ -45,8 +46,11 @@ func (ticket *Ticket) CalculateError() {
 	for _, number := range ticket.numbers {
 		validNumber := false
 		for _, tf := range ticketFields {
+		for index, tf := range ticketFields {
 			if tf.isValid(number) {
 				validNumber = true
+			} else {
+				tf.pos[index] = false
 			}
 		}
 		if !validNumber {
