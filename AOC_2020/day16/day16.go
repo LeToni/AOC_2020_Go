@@ -66,22 +66,6 @@ func main() {
 		nbt.CalculateError()
 	}
 	fmt.Println("Task 1 -> Scanning error rate for nearby tickets:", errorRate)
-
-	fieldNameToIndex := map[string]int{}
-	skipTicketIndices := map[int]bool{}
-
-	for _, nbt := range nearByTickets {
-		for index, number := range nbt.numbers {
-			if skipTicketIndices[index] {
-				continue
-			}
-			for _, tf := range ticketFields {
-				if tf.isValid(number) {
-
-				}
-			}
-		}
-	}
 }
 
 func readInput() {
