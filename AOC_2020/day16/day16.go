@@ -24,6 +24,8 @@ type TicketField struct {
 	name  string
 	rule1 Intervall
 	rule2 Intervall
+	index int
+	pos map[int]bool
 }
 
 func (tf *TicketField) isValid(number int) bool {
